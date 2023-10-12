@@ -1,6 +1,0 @@
-Things to improve on:
-
-- build increased model with open, high, low, close, volume statistics
-- build reinforcement learning model distributing money between assets and cash
-- create pipelines for automatic data loading, retraining and evaluation
-- hack yahoo encryption lul
