@@ -3,11 +3,12 @@ import numpy.random as rng
 import scipy.stats as stats
 
 class RandomWalk:
-    def __init__(self):
+    def __init__(self, size):
         self.growth = 0.0
+        self.size = size
 
     def get_data(self):
-        x = rng.rand(140) - 0.5 + self.growth
+        x = rng.rand(self.size) - 0.5 + self.growth
 
         return x
     
@@ -95,12 +96,12 @@ class CorrelationBuyer:
     
 class Simulator:
     def simulate(self, num_sec, length):
-        randomWallStreet = RandomWalk()
+        randomWallStreet = RandomWalk(num_sec)
         trendFollower = TrendFollower(num_sec)
         stdMaker = StdDecisionMaker(20, num_sec)
         corrBuyer = CorrelationBuyer()
 
-        data = np.zeros(140)
+        data = np.zeros(num_sec)
 
         for i in range(length):
             x = randomWallStreet.get_data()
@@ -108,11 +109,12 @@ class Simulator:
             std = stdMaker.decide(x)
             corr = corrBuyer.correlate(x) / 20
 
-
             datapoint = np.add(np.add(np.add(x, trend), std), corr)
             data = np.append(data, datapoint, axis=0)
 
         data = np.reshape(data, (num_sec, -1))
-        cumulative = np.cumsum(data, axis=1)
 
-        return cumulative
+        return data
+    
+    def cum_sim(self, num_sec, length):
+        return np.cumsum(self.simulate(num_sec, length), axis=1)
